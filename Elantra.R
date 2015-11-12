@@ -52,14 +52,25 @@ library(ggplot2)
 # Monthly sales prediction
 monthlyavg<-tapply(test$pred,test$MonthFactor,mean)
 monthlyavg<-as.data.frame(monthlyavg)
-monthlyavg
 monthlyavg$month<-c("Jan", "Feb", "Mar", "Apr", "May", 
                     "Jun", "Jul","Aug","Sep","Oct","Nov","Dec")
-monthlyavg$month<-factor(monthlyavg$month,c("Jan", "Feb", "Mar", "Apr", "May", 
-                                                    "Jun", "Jul","Aug","Sep","Oct","Nov","Dec"))
-ggplot(monthlyavg,aes(x=month,y=monthlyavg))+ 
-  geom_point(aes(size = monthlyavg))+
-               ylab("Sales Prediction") + 
+monthlyavg$DataType<-"Test"
+data1<-monthlyavg
+data1
+
+monthlyavg<-tapply(train$ElantraSales,train$MonthFactor,mean)
+monthlyavg<-as.data.frame(monthlyavg)
+monthlyavg$month<-c("Jan", "Feb", "Mar", "Apr", "May", 
+                    "Jun", "Jul","Aug","Sep","Oct","Nov","Dec")
+monthlyavg$DataType<-"Train"
+data2<-monthlyavg
+data2
+
+data=rbind(data1,data2)
+data
+
+ggplot(data,aes(x=month,y=monthlyavg,group=DataType))+
+  geom_line(aes(colour=DataType,size=8))+
+  ylab("Sales") + 
   xlab("Month of the Year") +
-  ggtitle("Monthly Sales Prediction")
-  
+  ggtitle("Average Monthly Sales")
