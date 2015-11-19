@@ -47,6 +47,22 @@ Rsq<-1-(SSE/SST)
 Rsq
 #0.7280232 ; model rejected
 
+#randon forest
+library(randomForest)
+str(train)
+mtry <- tuneRF(train[-3], train[,3],ntreeTry=100)
+mtry
+M4<-randomForest(ElantraSales~Unemployment+Queries+CPI_energy+CPI_all+MonthFactor,data=train,mtry=2,nodesize=5,ntree=1000,importance=TRUE)
+varImpPlot(M4,main="Model 4 Variable Importance",col="blue",pch=19)
+#reinforces all features important
+test$pred4<-predict(M4,newdata=test)
+SSE=sum((test$pred4-test$ElantraSales)^2)
+SST=sum((mean(train$ElantraSales)-test$ElantraSales)^2)
+Rsq<-1-(SSE/SST)
+Rsq
+# 0.4508474 model rejected
+
+
 library(ggplot2)
 
 # Monthly sales prediction
